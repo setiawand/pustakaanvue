@@ -9,6 +9,7 @@
                 <v-window-item :value="1">
                   <v-row class="fill-height">
                     <v-col cols="12" md="8">
+                      <v-form v-model="valid" @submit.prevent="login">
                       <v-card-text class="mt-12">
                         <h1 class="text-center display-2 blue--text text--accent-3">Sign in to Pustakaan.ID</h1>
                         <h2 class="text-center mt-2 display-1 blue--text text--accent-1" v-if="getText">{{getText}}</h2>
@@ -25,13 +26,14 @@
                           </v-btn>
                         </div>
                         <h4 class="text-center mt-4">Ensure your email for registration</h4>
-                        <v-form>
                           <v-text-field
                             label="Username"
                             name="username"
                             prepend-icon="mdi-email"
                             type="text"
                             color="blue accent-3"
+                            v-model="username" 
+                            clearable :rules="[rules.required]"
                           />
 
                           <v-text-field
@@ -41,13 +43,14 @@
                             prepend-icon="mdi-lock"
                             type="password"
                             color="blue accent-3"
+                            v-model="password" 
                           />
-                        </v-form>
                         <h3 class="text-center mt-4">Forgot your password ?</h3>
                       </v-card-text>
                       <div class="text-center mt-3 mb-3">
-                        <v-btn rounded color="blue accent-3" dark>SIGN IN</v-btn>
+                        <v-btn :disabled="!valid" rounded color="blue accent-3 white--text" type="submit">SIGN IN</v-btn>
                       </div>
+                      </v-form>
                     </v-col>
                     <v-col cols="12" md="4" class="blue accent-3">
                       <v-card-text class="white--text mt-12">
@@ -135,6 +138,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { AUTH_REQUEST } from "@/store/actions/auth"
 
 export default {
   name: 'App',
@@ -143,14 +147,30 @@ export default {
   },
 
   data: () => ({
-    step: 1
+    step: 1,
+    valid: false,
+    username: '',
+    password: '',
+    rules: {
+      required: value => !!value || 'Required.',
+    },
   }),
   computed: {
     ...mapGetters(['getText'])
   },
   methods: {
-    ubahText(newtext) {
+    ubahText: function (newtext) {
       this.$store.dispatch('ubahText', newtext)
+    },
+    login: function () {
+      this.$store.dispatch(AUTH_REQUEST, { username: this.username, password: this.password })
+      .then(() => {
+        alert('Berhasil login')
+      })
+      .catch(err => {
+        console.log(err)
+        alert('Gagal login')
+      })
     }
   }
 };
