@@ -10,17 +10,17 @@
                   <v-row class="fill-height">
                     <v-col cols="12" md="8">
                       <v-card-text class="mt-12">
-                        <h1 class="text-center display-2 blue--text text--accent-3"
-                        >Sign in to Pustakaan.ID</h1>
+                        <h1 class="text-center display-2 blue--text text--accent-3">Sign in to Pustakaan.ID</h1>
+                        <h2 class="text-center mt-2 display-1 blue--text text--accent-1" v-if="getText">{{getText}}</h2>
                         <div class="text-center mt-4">
-                          <v-btn class="mx-2" fab color="black" outlined>
+                          <v-btn class="mx-2" fab color="black" outlined @click="ubahText('dengan Facebook')">
                             <v-icon large>mdi-facebook</v-icon>
                           </v-btn>
 
-                          <v-btn class="mx-2" fab color="black" outlined>
+                          <v-btn class="mx-2" fab color="black" outlined @click="ubahText('dengan Google Plus')">
                             <v-icon large>mdi-google-plus</v-icon>
                           </v-btn>
-                          <v-btn class="mx-2" fab color="black" outlined>
+                          <v-btn class="mx-2" fab color="black" outlined @click="ubahText('dengan LinkedIn')">
                             <v-icon large>mdi-linkedin</v-icon>
                           </v-btn>
                         </div>
@@ -134,6 +134,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'App',
 
@@ -143,5 +145,13 @@ export default {
   data: () => ({
     step: 1
   }),
+  computed: {
+    ...mapGetters(['getText'])
+  },
+  methods: {
+    ubahText(newtext) {
+      this.$store.dispatch('ubahText', newtext)
+    }
+  }
 };
 </script>
