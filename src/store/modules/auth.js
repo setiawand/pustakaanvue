@@ -27,11 +27,18 @@ const auth = {
           }))
           .then(resp => {
             console.log(resp)
+            if (resp.data.status) {
+              let token = resp.data.access_token
+              localStorage.setItem('token', token);
+              axios.defaults.headers.common['Authorization'] = token
+              commit(AUTH_SUCCESS, resp)
+              resolve(resp)
+            }
           })
           .catch(err => {
-            commit(AUTH_ERROR, err);
-            localStorage.removeItem("token");
-            reject(err);
+            commit(AUTH_ERROR, err)
+            localStorage.removeItem("token")
+            reject(err)
           });
       });
     },
@@ -51,7 +58,7 @@ const auth = {
     },
     [AUTH_SUCCESS]: (state, resp) => {
       state.status = "success";
-      state.token = resp.data.responseData.results[0].token;
+      state.token = resp.data.access_token;
       state.hasLoadedOnce = true;
     },
     [AUTH_ERROR]: state => {

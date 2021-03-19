@@ -1,4 +1,7 @@
 # pustakavue
 
-## create login page
+## Routing
 
+```
+yarn add vue-router
+```
